@@ -1,11 +1,32 @@
 # Cloud Deploy and Cloud Run configuration
 
-apiVersion: skaffold/v2beta18
-kind: Config
-deploy:
-  cloudrun:
-    projectid: ${PROJECT_ID}
-    region: ${_REGION}
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: my-run-pipeline
+  description: Cloud Run application pipeline
+serialPipeline:
+  stages:
+    - targetId: run-production-1
+    - targetId: run-production-2
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: run-production-1
+  description: "Cloud Run Production Target 1"
+run:
+  location: ${_REGION}
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: run-production-2
+  description: "Cloud Run Production Target 2"
+run:
+  location: ${_REGION}
 
 ---
 apiVersion: serving.knative.dev/v1
@@ -31,31 +52,3 @@ spec:
             limits:
               cpu: "1"
               memory: "256Mi"
-
----
-apiVersion: deploy.cloud.google.com/v1
-kind: DeliveryPipeline
-metadata:
-  name: my-run-pipeline
-  description: Cloud Run application pipeline
-serialPipeline:
-  stages:
-    - targetId: run-production-1, run-production-2
-
----
-apiVersion: deploy.cloud.google.com/v1
-kind: Target
-metadata:
-  name: run-production-1
-  description: "Cloud Run Production Target 1"
-run:
-  location: ${_REGION}
-
----
-apiVersion: deploy.cloud.google.com/v1
-kind: Target
-metadata:
-  name: run-production-2
-  description: "Cloud Run Production Target 2"
-run:
-  location: ${_REGION}
