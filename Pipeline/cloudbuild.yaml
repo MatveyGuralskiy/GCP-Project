@@ -121,9 +121,9 @@ steps:
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
-      [
-        gcloud run deploy cloud-run-service --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1 --region $_REGION --platform managed --allow-unauthenticated,
-      ]
+      - "-c"
+      - |
+        gcloud run deploy cloud-run-service --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1 --region $_REGION --platform managed --allow-unauthenticated
 
 substitutions:
   _PROJECT_ID: networking-438508
