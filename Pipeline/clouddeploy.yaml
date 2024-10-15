@@ -27,23 +27,3 @@ metadata:
 run:
   location: ${_REGION}
   customTargetType: cloud-run-autoscaling
----
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: matvey-cloud-run-service
-spec:
-  template:
-    spec:
-      containers:
-        - image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
-          resources:
-            limits:
-              cpu: 1
-              memory: 256Mi
-          timeoutSeconds: 60
-      maxInstanceCount: 5
-      minInstanceCount: 2
-  traffic:
-    - percent: 100
-      latestRevision: true
