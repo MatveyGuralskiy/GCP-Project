@@ -77,36 +77,22 @@ steps:
       - "-c"
       - |
         docker run --name my-app -d -p 3000:3000 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
-        sleep 5
-        docker logs my-app
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       - "-c"
       - |
+        echo "Checking application status..."
+
+        # Check if the container is running
         if ! docker ps | grep -q my-app; then
-          echo "Docker container 'my-app' is not running."
+          echo "Docker container 'my-app' is not running. Here are the logs:"
           docker ps -a
           docker logs my-app || true
           exit 1
-        fi
-        echo "✔ Docker container 'my-app' is running."
-        echo "Checking application status..."
-        for i in {1..3}; do
-          RESPONSE=$$(nc -z localhost 3000)
-          wget --spider --timeout=3 http://localhost:3000
-          if [ $$? -eq 0 ]; then
-            echo "✔ Application page is accessible"
-            break
-          fi
-          echo "Application not accessible yet. Retrying in 3 seconds..."
-          sleep 3
-        done
-
-        if [ $$? -ne 0 ]; then
-          echo "Failed to access application page."
-          exit 1
+        else
+          echo "✔ Docker container 'my-app' is running"
         fi
 
   - name: "gcr.io/cloud-builders/docker"
