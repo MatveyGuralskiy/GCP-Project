@@ -13,8 +13,16 @@ steps:
       - "-c"
       - |
         echo "Fetching secret values..."
-        echo "REPOSITORY_NAME=$(gcloud secrets versions access latest --secret=REPOSITORY_NAME)" >> /workspace/build.env
-        echo "LOGS_BUCKET=$(gcloud secrets versions access latest --secret=LOGS_BUCKET)" >> /workspace/build.env
+        export PROJECT_ID=$(gcloud secrets versions access latest --secret=PROJECT_ID)
+        export REPOSITORY_NAME=$(gcloud secrets versions access latest --secret=REPOSITORY_NAME)
+        export REGION=$(gcloud secrets versions access latest --secret=REGION)
+        export LOGS_BUCKET=$(gcloud secrets versions access latest --secret=LOGS_BUCKET)
+        export SERVICE_ACCOUNT=$(gcloud secrets versions access latest --secret=SERVICE_ACCOUNT)
+
+        echo "PROJECT_ID=${PROJECT_ID}" >> /workspace/build.env
+        echo "REPOSITORY_NAME=${REPOSITORY_NAME}" >> /workspace/build.env
+        echo "REGION=${REGION}" >> /workspace/build.env
+        echo "LOGS_BUCKET=${LOGS_BUCKET}" >> /workspace/build.env
 
         echo "Creating .env file..."
         echo "PORT=$(gcloud secrets versions access latest --secret=PORT)" >> Application/.env
@@ -49,7 +57,7 @@ steps:
       - |
         source /workspace/build.env
         cd Application
-        docker build -t "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
+        docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -57,7 +65,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker push "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -65,7 +73,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker run --name my-app -d -p 80:80 "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker run --name my-app -d -p 80:80 "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/curl"
     entrypoint: "bash"
@@ -90,13 +98,10 @@ steps:
         source /workspace/build.env
         docker stop my-app
         docker rm my-app
-        docker rmi "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker rmi "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
 logsBucket: $LOGS_BUCKET
 serviceAccount: $SERVICE_ACCOUNT
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
-
-substitutions:
-  _REGION: $(gcloud secrets versions access latest --secret=REGION)
