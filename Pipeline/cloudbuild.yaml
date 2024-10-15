@@ -74,36 +74,30 @@ steps:
     args:
       - "-c"
       - |
-        echo "Checking if Docker container is running..."
-        if docker ps | grep my-app; then
-          echo "✔ Docker container 'my-app' is running."
-          echo "Container details:"
-          docker inspect my-app
-          CONTAINER_IP=$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
-          echo "Waiting for the app to start..."
-          for i in {1..12}; do
-            RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://$$CONTAINER_IP:3000)
-            if [ "$$RESPONSE" -eq 200 ]; then
-              echo "✔ Website is up and running!"
-              exit 0
-            fi
-            echo "Attempt $$i: Website not ready yet. Status code: $$RESPONSE. Waiting..."
-            sleep 5
-          done
-          echo "Website did not become accessible within the allocated time."
-          echo "Final container logs:"
-          docker logs my-app
-          exit 1
-        else
+        echo "Checking if Docker container 'my-app' is running..."
+        if ! docker ps | grep -q my-app; then
           echo "Docker container 'my-app' is not running."
-          echo "All running containers:"
-          docker ps
-          echo "All containers (including stopped):"
           docker ps -a
-          echo "Container logs:"
           docker logs my-app || true
           exit 1
         fi
+
+        echo "✔ Docker container 'my-app' is running."
+        CONTAINER_IP=$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
+
+        for i in {1..12}; do
+          HTTP_CODE=$$(curl -o /dev/null -s -w "%{http_code}" http://$$CONTAINER_IP:3000)
+          if [ "$$HTTP_CODE" -eq 200 ]; then
+            echo "✔ Website is up and running!"
+            exit 0
+          fi
+          echo "Attempt $$i: Website not ready yet. HTTP status: $$HTTP_CODE. Retrying in 5 seconds..."
+          sleep 5
+        done
+
+        echo "Website did not become accessible within the allocated time."
+        docker logs my-app
+        exit 1
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
