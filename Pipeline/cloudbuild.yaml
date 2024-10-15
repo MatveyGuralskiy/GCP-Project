@@ -26,7 +26,7 @@ steps:
 substitutions:
   _PROJECT_ID: networking-438508
   _REPOSITORY_NAME: app-gcp
-  _REGION: europe-west3
+  _REGION: europe-west2
 
 logsBucket: "gs://matvey-ci-cd"
 serviceAccount: "matvey-admin@networking-438508.iam.gserviceaccount.com"
