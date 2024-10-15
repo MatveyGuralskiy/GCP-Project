@@ -30,3 +30,6 @@ substitutions:
 
 logsBucket: "gs://matvey-ci-cd"
 serviceAccount: "matvey-admin@networking-438508.iam.gserviceaccount.com"
+
+options:
+  machineType: "E2_MEDIUM"
