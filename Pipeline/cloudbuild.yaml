@@ -87,13 +87,14 @@ steps:
         fi
 
   - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
     args:
       - "-c"
       - |
         source /workspace/build.env
         docker stop my-app
         docker rm my-app
-        docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+        docker rmi "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0"
 
 logsBucket: $(gcloud secrets versions access latest --secret=LOGS_BUCKET)
 serviceAccount: $(gcloud secrets versions access latest --secret=SERVICE_ACCOUNT)
