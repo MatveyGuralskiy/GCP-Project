@@ -122,12 +122,19 @@ steps:
       - "-c"
       - |
         echo "Deploying to Cloud Deploy..."
+        gcloud deploy apply --file=clouddeploy.yaml
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Creating a new release..."
         gcloud deploy releases create release-v1.0 \
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=my-run-pipeline \
-          --config=clouddeploy.yaml \
-          --images=app-1=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0,app-2=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-2:V1.0,app-3=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-3:V1.0,app-4=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-4:V1.0 \
+          --images=app-1=${_REGION}-docker.pkg.dev/${_PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0 \
           --description="Deploying new version of Apps to V1.0"
 
 substitutions:
