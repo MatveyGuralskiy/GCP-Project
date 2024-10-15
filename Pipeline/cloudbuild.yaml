@@ -145,12 +145,14 @@ steps:
       - "-c"
       - |
         echo "Creating a new release..."
+        cd Pipeline
         gcloud deploy releases create V1.0 \
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=my-run-pipeline \
           --images=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0 \
-          --description="Deploying new version of Apps to V1.0"
+          --description="Deploying new version of Apps to V1.0" \
+          --skaffold-file=skaffold.yaml
 
 substitutions:
   _PROJECT_ID: networking-438508
