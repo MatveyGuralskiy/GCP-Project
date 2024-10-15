@@ -118,8 +118,8 @@ steps:
           echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1'."
         fi
 
-  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-    entrypoint: gcloud
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
     args:
       - "-c"
       - |
