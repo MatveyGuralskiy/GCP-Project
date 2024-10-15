@@ -51,7 +51,7 @@ steps:
       - |
         source /workspace/build.env
         cd Application
-        docker build -t "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0" .
+        docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -59,7 +59,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker push "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0"
+        docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -67,7 +67,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker run --name my-app -d -p 80:80 "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0"
+        docker run --name my-app -d -p 80:80 "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/curl"
     entrypoint: "bash"
