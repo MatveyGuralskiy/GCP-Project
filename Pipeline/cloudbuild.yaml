@@ -69,6 +69,11 @@ steps:
       - |
         docker run --name my-app -d -p 3000:3000 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
         if ! docker ps | grep -q my-app; then
           echo "Docker container 'my-app' is not running."
           docker ps -a
@@ -79,7 +84,7 @@ steps:
         echo "✔ Docker container 'my-app' is running."
 
         for i in {1..20}; do
-          HTTP_CODE=$$(curl -o /dev/null -s -w "%{http_code}" http://localhost:3000)  # Check localhost or $CONTAINER_IP
+          HTTP_CODE=$$(curl -o /dev/null -s -w "%{http_code}" http://localhost:3000)  # Check localhost or $$CONTAINER_IP
           if [ "$$HTTP_CODE" -eq 200 ]; then
             echo "✔ Website is up and running!"
             exit 0
