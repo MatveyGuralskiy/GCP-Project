@@ -75,12 +75,16 @@ steps:
       - "-c"
       - |
         echo "Waiting for the app to start..."
-        sleep 15
+        sleep 30  # Increased sleep duration
         RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost)
         if [ "$$RESPONSE" -eq 200 ]; then
           echo "✔ Website is up and running!"
         else
           echo "Website is not accessible. Status code: $$RESPONSE"
+          echo "Here are the current running containers:"
+          docker ps -a
+          echo "Here are the logs for the application:"
+          docker logs my-app || true
           exit 1
         fi
 
