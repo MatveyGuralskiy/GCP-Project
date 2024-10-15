@@ -149,7 +149,7 @@ steps:
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=$$DELIVERY_PIPELINE \
-          --images=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0 \
+          --images=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0 \
           --description="Deploying new version of Apps to V1.0"
 
 substitutions:
