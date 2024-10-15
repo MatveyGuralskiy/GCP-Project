@@ -101,7 +101,6 @@ steps:
     args:
       - "-c"
       - |
-        source /workspace/build.env
         docker stop my-app
         docker rm my-app
         docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
@@ -116,9 +115,8 @@ steps:
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=$_DELIVERY_PIPELINE \
-          --release=V1.0 \
-          --description="Deploying new version of App to V1.0" \
-          --image=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0
+          --images=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0 \
+          --description="Deploying new version of App to V1.0"
 
 substitutions:
   _PROJECT_ID: networking-438508
