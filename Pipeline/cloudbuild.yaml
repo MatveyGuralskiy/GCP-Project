@@ -28,5 +28,5 @@ substitutions:
   _REPOSITORY_NAME: app-gcp
   _REGION: europe-west3
 
-images:
-  - "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+logsBucket: "gs://matvey-ci-cd"
+serviceAccount: "99824859807@cloudbuild.gserviceaccount.com"
