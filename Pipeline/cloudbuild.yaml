@@ -122,7 +122,7 @@ steps:
       - "-c"
       - |
         echo "Deploying to Cloud Deploy..."
-        gcloud deploy releases create \
+        gcloud deploy releases create V1.0 \
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=$_DELIVERY_PIPELINE \
