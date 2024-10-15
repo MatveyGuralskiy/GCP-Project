@@ -122,12 +122,14 @@ steps:
       - "-c"
       - |
         echo "Deploying to Cloud Deploy..."
-        gcloud deploy releases create V1.0 \
+        gcloud deploy releases create release-v1.0 \
           --project=$_PROJECT_ID \
           --region=$_REGION \
-          --delivery-pipeline=$$(cat Application/.env | grep DELIVERY_PIPELINE | cut -d '=' -f2) \
-          --images="$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0" \
-          --description="Deploying new version of App to V1.0"
+          --delivery-pipeline=my-run-pipeline \
+          --config=clouddeploy.yaml \
+          --skaffold-file=skaffold.yaml \
+          --images=app-1=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0,app-2=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-2:V1.0,app-3=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-3:V1.0,app-4=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-4:V1.0 \
+          --description="Deploying new version of Apps to V1.0"
 
 substitutions:
   _PROJECT_ID: networking-438508
