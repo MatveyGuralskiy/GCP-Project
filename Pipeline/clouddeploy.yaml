@@ -6,7 +6,11 @@ metadata:
 serialPipeline:
   stages:
     - targetId: run-production-1
+      rolloutPolicy:
+        disableRolloutAfterFailures: true
     - targetId: run-production-2
+      rolloutPolicy:
+        disableRolloutAfterFailures: true
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
