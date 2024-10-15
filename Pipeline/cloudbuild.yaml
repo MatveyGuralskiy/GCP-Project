@@ -125,7 +125,7 @@ steps:
         gcloud deploy releases create V1.0 \
           --project=$_PROJECT_ID \
           --region=$_REGION \
-          --delivery-pipeline=$_DELIVERY_PIPELINE \
+          --delivery-pipeline=$$(cat Application/.env | grep DELIVERY_PIPELINE | cut -d '=' -f2) \
           --images="$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0" \
           --description="Deploying new version of App to V1.0"
 
