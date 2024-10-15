@@ -6,6 +6,8 @@ steps:
       - |
         git fetch origin features
         git checkout features
+        cd Application
+        ls -la
 
   - name: "node:18"
     entrypoint: "npm"
