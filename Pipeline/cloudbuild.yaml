@@ -63,20 +63,20 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1" .
+        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1 .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       [
-        docker push "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1",
+        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1,
       ]
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       [
-        docker run --name my-app -d -p 3000:3000 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1",
+        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1,
       ]
 
   - name: "gcr.io/cloud-builders/docker"
@@ -110,8 +110,8 @@ steps:
         fi
 
         echo "Removing the Docker image..."
-        if [ "$(docker images -q "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1")" ]; then
-          docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1"
+        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1)" ]; then
+          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1
         else
           echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.1'."
         fi
