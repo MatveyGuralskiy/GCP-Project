@@ -47,7 +47,7 @@ def main():
     client = secretmanager.SecretManagerServiceClient()
 
     for key, value in os.environ.items():
-        if key.startswith("GCP_") or key.startswith("SECRET_") or key in ["PORT", "JWT_SECRET", "FIREBASE_DB_URL", "FUNCTION_COPY_URL", "FUNCTION_DELETE_URL", "REPOSITORY_NAME", "REGION", "LOGS_BUCKET", "SERVICE_ACCOUNT"]:
+        if key.startswith("GCP_") or key.startswith("SECRET_") or key in ["PORT", "JWT_SECRET", "FIREBASE_DB_URL", "FUNCTION_COPY_URL", "FUNCTION_DELETE_URL", "REPOSITORY_NAME", "REGION_PROJECT", "LOGS_BUCKET", "SERVICE_ACCOUNT"]:
             create_secret(client, project_id, key, value)
 
 if __name__ == "__main__":
