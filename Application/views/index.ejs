@@ -82,6 +82,10 @@
             const result = await response.text();
             showNotification(result); // Show the result in a notification
         }
+
+        setInterval(() => {
+            location.reload();
+        }, 5000);
     </script>
 </head>
 
@@ -135,7 +139,7 @@
                             </table>
 
                             <div class="row mt-5">
-                                <p style="text-align: center;">V1.3<br> &#169; Created by Matvey Guralskiy</p>
+                                <p style="text-align: center;">V1.4<br> &#169; Created by Matvey Guralskiy</p>
                             </div>
     </div>
 
