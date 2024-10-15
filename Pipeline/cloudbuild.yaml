@@ -56,10 +56,45 @@ steps:
         "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0",
       ]
 
-substitutions:
-  _PROJECT_ID: networking-438508
-  _REPOSITORY_NAME: app-gcp
-  _REGION: europe-west1
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "run",
+        "--name",
+        "my-app",
+        "-d",
+        "-p",
+        "80:80",
+        "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0",
+      ]
 
-logsBucket: "gs://matvey-ci-cd"
-serviceAccount: "matvey-admin@networking-438508.iam.gserviceaccount.com"
+  - name: "gcr.io/cloud-builders/curl"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Waiting for the app to start..."
+        sleep 30  # Wait for 30 seconds to allow the app to initialize
+        RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost)
+        if [ "$RESPONSE" -eq 200 ]; then
+          echo "✔ Website is up and running!"
+        else
+          echo "Website is not accessible. Status code: $RESPONSE"
+          exit 1
+        fi
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "-c"
+      - |
+        docker stop my-app
+        docker rm my-app
+        docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+
+substitutions:
+  _PROJECT_ID: $(gcloud secrets versions access latest --secret=PROJECT_ID)
+  _REPOSITORY_NAME: $(gcloud secrets versions access latest --secret=REPOSITORY_NAME)
+  _REGION: $(gcloud secrets versions access latest --secret=REGION)
+
+logsBucket: $(gcloud secrets versions access latest --secret=LOGS_BUCKET)
+serviceAccount: $(gcloud secrets versions access latest --secret=SERVICE_ACCOUNT)
