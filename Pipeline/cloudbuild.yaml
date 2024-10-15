@@ -13,9 +13,7 @@ steps:
       - "-c"
       - |
         echo "Fetching secret values..."
-        echo "PROJECT_ID=$(gcloud secrets versions access latest --secret=PROJECT_ID)" >> /workspace/build.env
         echo "REPOSITORY_NAME=$(gcloud secrets versions access latest --secret=REPOSITORY_NAME)" >> /workspace/build.env
-        echo "REGION_PROJECT=$(gcloud secrets versions access latest --secret=REGION_PROJECT)" >> /workspace/build.env
         echo "LOGS_BUCKET=$(gcloud secrets versions access latest --secret=LOGS_BUCKET)" >> /workspace/build.env
 
         echo "Creating .env file..."
@@ -51,7 +49,7 @@ steps:
       - |
         source /workspace/build.env
         cd Application
-        docker build -t "${REGION_PROJECT}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
+        docker build -t "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -59,7 +57,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker push "${REGION_PROJECT}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker push "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -67,7 +65,7 @@ steps:
       - "-c"
       - |
         source /workspace/build.env
-        docker run --name my-app -d -p 80:80 "${REGION_PROJECT}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker run --name my-app -d -p 80:80 "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
   - name: "gcr.io/cloud-builders/curl"
     entrypoint: "bash"
@@ -92,10 +90,13 @@ steps:
         source /workspace/build.env
         docker stop my-app
         docker rm my-app
-        docker rmi "${REGION_PROJECT}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker rmi "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
 
 logsBucket: $LOGS_BUCKET
 serviceAccount: $SERVICE_ACCOUNT
 
 options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
+substitutions:
+  _REGION: europe-west1
