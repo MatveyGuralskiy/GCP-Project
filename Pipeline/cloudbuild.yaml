@@ -6,26 +6,34 @@ steps:
       - |
         git fetch origin features
         git checkout features
-        cd Application
-        ls -la
 
-  - name: "node:18"
+  - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args:
       - "-c"
       - |
-        cd Application
-        npm install
+        echo "Creating .env file..."
+        echo "PORT=$(gcloud secrets versions access latest --secret=PORT)" >> Application/.env
+        echo "JWT_SECRET=$(gcloud secrets versions access latest --secret=JWT_SECRET)" >> Application/.env
+        echo "GCP_KEYFILE_PATH=$(gcloud secrets versions access latest --secret=GCP_KEYFILE_PATH)" >> Application/.env
+        echo "GCP_BUCKET_TEMPORARY=$(gcloud secrets versions access latest --secret=GCP_BUCKET_TEMPORARY)" >> Application/.env
+        echo "GCP_BUCKET_MAIN=$(gcloud secrets versions access latest --secret=GCP_BUCKET_MAIN)" >> Application/.env
+        echo "FIREBASE_DB_URL=$(gcloud secrets versions access latest --secret=FIREBASE_DB_URL)" >> Application/.env
+        echo "FUNCTION_COPY_URL=$(gcloud secrets versions access latest --secret=FUNCTION_COPY_URL)" >> Application/.env
+        echo "FUNCTION_DELETE_URL=$(gcloud secrets versions access latest --secret=FUNCTION_DELETE_URL)" >> Application/.env
 
   - name: "node:18"
     entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        cd Application
-        npm test
+    dir: "Application"
+    args: [npm install]
+
+  - name: "node:18"
+    entrypoint: "bash"
+    dir: "Application"
+    args: [npm test]
 
   - name: "gcr.io/cloud-builders/docker"
+    dir: "Application"
     args:
       [
         "build",
@@ -35,6 +43,7 @@ steps:
       ]
 
   - name: "gcr.io/cloud-builders/docker"
+    dir: "Application"
     args:
       [
         "push",
