@@ -29,7 +29,7 @@ run:
   location: ${_REGION}
 
 ---
-apiVersion: serving.knative.dev/v1
+apiVersion: run.googleapis.com/v1
 kind: Service
 metadata:
   name: my-app
@@ -51,4 +51,4 @@ spec:
           resources:
             limits:
               cpu: "1"
-              memory: "256Mi"
+              memory: 256Mi
