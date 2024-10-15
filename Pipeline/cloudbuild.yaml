@@ -10,7 +10,7 @@ steps:
         ls -la
 
   - name: "node:18"
-    entrypoint: "npm"
+    entrypoint: "bash"
     args:
       - "-c"
       - |
@@ -18,7 +18,7 @@ steps:
         npm install
 
   - name: "node:18"
-    entrypoint: "npm"
+    entrypoint: "bash"
     args:
       - "-c"
       - |
