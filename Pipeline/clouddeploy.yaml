@@ -7,8 +7,7 @@ serialPipeline:
   stages:
     - targetId: run-production-1
     - targetId: run-production-2
-      profiles:
-        - cloud-run-autoscaling
+
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -17,6 +16,7 @@ metadata:
   description: "Cloud Run Production Target 1"
 run:
   location: ${_REGION}
+  customTargetType: cloud-run-autoscaling
 
 ---
 apiVersion: deploy.cloud.google.com/v1
@@ -26,21 +26,24 @@ metadata:
   description: "Cloud Run Production Target 2"
 run:
   location: ${_REGION}
+  customTargetType: cloud-run-autoscaling
 ---
-apiVersion: deploy.cloud.google.com/v1
-kind: Profile
+apiVersion: serving.knative.dev/v1
+kind: Service
 metadata:
-  name: cloud-run-autoscaling
+  name: matvey-cloud-run-service
 spec:
-  manifest:
-    deploy:
-      cloudRun:
-        service: matvey-cloud-run-service
-        region: ${_REGION}
-        image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
-        cpu: 1
-        memory: 256Mi
-        maxInstances: 5
-        minInstances: 2
-        timeout: 60
-        allowUnauthenticated: true
+  template:
+    spec:
+      containers:
+        - image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
+          resources:
+            limits:
+              cpu: 1
+              memory: 256Mi
+          timeoutSeconds: 60
+      maxInstanceCount: 5
+      minInstanceCount: 2
+  traffic:
+    - percent: 100
+      latestRevision: true
