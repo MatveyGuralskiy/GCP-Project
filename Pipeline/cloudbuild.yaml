@@ -127,7 +127,6 @@ steps:
           --region=$_REGION \
           --delivery-pipeline=my-run-pipeline \
           --config=clouddeploy.yaml \
-          --skaffold-file=skaffold.yaml \
           --images=app-1=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0,app-2=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-2:V1.0,app-3=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-3:V1.0,app-4=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-4:V1.0 \
           --description="Deploying new version of Apps to V1.0"
 
