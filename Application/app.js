@@ -244,7 +244,7 @@ app.post('/trigger-delete', async (req, res) => {
 
 if (process.env.NODE_ENV !== 'test') {
     app.listen(port, '0.0.0.0', () => {
-        console.log(`Server is running on http://localhost:${port}`);
+        console.log(`Server is running on http://0.0.0.0:${port}`);
     });
 } else {
     console.log(`Test environment: Server will not start. Port: ${port}`);
