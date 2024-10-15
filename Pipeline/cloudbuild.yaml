@@ -99,4 +99,4 @@ options:
   defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
 
 substitutions:
-  _REGION: europe-west1
+  _REGION: $(gcloud secrets versions access latest --secret=REGION)
