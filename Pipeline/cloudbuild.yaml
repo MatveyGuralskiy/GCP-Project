@@ -63,7 +63,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2 .
+        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3 .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -71,7 +71,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2
+        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -79,7 +79,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2
+        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -112,10 +112,10 @@ steps:
         fi
 
         echo "Removing the Docker image..."
-        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2)" ]; then
-          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2
+        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3)" ]; then
+          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3
         else
-          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2'."
+          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3'."
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -123,7 +123,12 @@ steps:
     args:
       - "-c"
       - |
-        gcloud run deploy cloud-run-service --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.2 --region $_REGION --platform managed --allow-unauthenticated
+        gcloud run deploy cloud-run-service \
+        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.3 \
+        --region $_REGION \
+        --platform managed \
+        --allow-unauthenticated \
+        --min-instances 2
 
 substitutions:
   _PROJECT_ID: networking-438508
