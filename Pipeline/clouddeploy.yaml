@@ -7,7 +7,6 @@ serialPipeline:
   stages:
     - targetId: run-production-1
     - targetId: run-production-2
-
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -16,8 +15,6 @@ metadata:
   description: "Cloud Run Production Target 1"
 run:
   location: ${_REGION}
-  customTargetType: cloud-run-autoscaling
-
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -26,4 +23,3 @@ metadata:
   description: "Cloud Run Production Target 2"
 run:
   location: ${_REGION}
-  customTargetType: cloud-run-autoscaling
