@@ -7,10 +7,10 @@ serialPipeline:
   stages:
     - targetId: run-production-1
       failurePolicy:
-        - noRollbackOnFailure: true
+        noRollbackOnFailure: true
     - targetId: run-production-2
       failurePolicy:
-        - noRollbackOnFailure: true
+        noRollbackOnFailure: true
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
