@@ -14,8 +14,7 @@ metadata:
   name: run-production-1
   description: "Cloud Run Production Target 1"
 run:
-  location: ${_REGION}
-  service: cloud-run-service
+  location: projects/$_PROJECT_ID/locations/$_REGION
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -23,5 +22,4 @@ metadata:
   name: run-production-2
   description: "Cloud Run Production Target 2"
 run:
-  location: ${_REGION}
-  service: cloud-run-service
+  location: projects/$_PROJECT_ID/locations/$_REGION
