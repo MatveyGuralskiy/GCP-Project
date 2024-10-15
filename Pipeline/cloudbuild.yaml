@@ -52,6 +52,15 @@ steps:
     args:
       - "-c"
       - |
+        echo "Cleaning up unused Docker containers and images..."
+        docker container prune -f
+        docker rmi $(docker images -f "dangling=true" -q) || true
+
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
         cd Application
         docker build -t "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0" .
 
