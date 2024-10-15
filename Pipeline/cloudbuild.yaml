@@ -97,7 +97,7 @@ steps:
         # Check final response
         if [ "$$RESPONSE" -ne 200 ]; then
           echo "Failed to access application page. HTTP status code: $$RESPONSE"
-          docker logs test-container  # Print logs for debugging
+          docker logs my-app  # Print logs for debugging
           exit 1
         fi
 
