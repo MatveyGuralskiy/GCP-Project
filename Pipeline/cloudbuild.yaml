@@ -44,21 +44,21 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0" .
+        docker build -t "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0" .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       - "-c"
       - |
-        docker push "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker push "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
       - "-c"
       - |
-        docker run --name my-app -d -p 80:80 "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker run --name my-app -d -p 80:80 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
   - name: "gcr.io/cloud-builders/curl"
     entrypoint: "bash"
@@ -83,7 +83,7 @@ steps:
         source /workspace/build.env
         docker stop my-app
         docker rm my-app
-        docker rmi "${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY_NAME}/app:V1.0"
+        docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
 substitutions:
   _PROJECT_ID: networking-438508
