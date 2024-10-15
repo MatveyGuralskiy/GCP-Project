@@ -101,9 +101,20 @@ steps:
     args:
       - "-c"
       - |
-        docker stop my-app
-        docker rm my-app
-        docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+        echo "Stopping and removing the Docker container..."
+        if [ "$(docker ps -q -f name=my-app)" ]; then
+          docker stop my-app
+          docker rm my-app
+        else
+          echo "No running container found with name 'my-app'."
+        fi
+
+        echo "Removing the Docker image..."
+        if [ "$(docker images -q "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0")" ]; then
+          docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+        else
+          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0'."
+        fi
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -115,7 +126,8 @@ steps:
           --project=$_PROJECT_ID \
           --region=$_REGION \
           --delivery-pipeline=$_DELIVERY_PIPELINE \
-          --images=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0 \
+          --release=V1.0 \
+          --images="$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app=V1.0" \
           --description="Deploying new version of App to V1.0"
 
 substitutions:
