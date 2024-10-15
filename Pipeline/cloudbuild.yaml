@@ -121,6 +121,17 @@ steps:
     args:
       - "-c"
       - |
+        echo "Deploying to Cloud Run..."
+        gcloud run deploy cloud-run-service \
+          --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0 \
+          --region $_REGION \
+          --platform managed
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
         echo "Deploying to Cloud Deploy..."
         cd Pipeline
         gcloud deploy apply \
