@@ -36,18 +36,18 @@ def read_keyfile(file_path):
         return file.read()
 
 def main():
-    env_file_path = 'Application/.env'
+    env_file_path = '../Application/.env'
     load_dotenv(env_file_path)
+
+    if not os.path.exists(env_file_path):
+        print(f"❌ .env file not found at {env_file_path}.")
+        return
     
     if 'GOOGLE_APPLICATION_CREDENTIALS' not in os.environ:
         print("GOOGLE_APPLICATION_CREDENTIALS environment variable not set. Please set it to the path of your service account key JSON file.")
         return
 
     project_id = os.getenv("PROJECT_ID")
-
-    if not project_id:
-        print("PROJECT_ID not found in the .env file.")
-        return
 
     client = secretmanager.SecretManagerServiceClient()
 
@@ -60,7 +60,7 @@ def main():
             print("🔒 GCP_KEYFILE secret already exists, added a new version.")
 
     for key, value in os.environ.items():
-        if key.startswith("GCP_") or key.startswith("SECRET_") or key in ["PORT", "JWT_SECRET", "FIREBASE_DB_URL", "FUNCTION_COPY_URL", "FUNCTION_DELETE_URL", "REPOSITORY_NAME", "REGION_PROJECT", "LOGS_BUCKET", "SERVICE_ACCOUNT"]:
+        if key.startswith("GCP_") or key.startswith("SECRET_") or key in ["PORT", "JWT_SECRET", "FIREBASE_DB_URL", "FUNCTION_COPY_URL", "FUNCTION_DELETE_URL", "REPOSITORY_NAME", "REGION_PROJECT", "LOGS_BUCKET", "SERVICE_ACCOUNT", "DELIVERY_PIPELINE"]:
             if create_secret(client, project_id, key, value):
                 print(f"✔ Created secret: {key}.")
             else:

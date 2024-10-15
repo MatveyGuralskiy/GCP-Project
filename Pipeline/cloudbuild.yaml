@@ -21,6 +21,7 @@ steps:
         echo "FIREBASE_DB_URL=$(gcloud secrets versions access latest --secret=FIREBASE_DB_URL)" >> Application/.env
         echo "FUNCTION_COPY_URL=$(gcloud secrets versions access latest --secret=FUNCTION_COPY_URL)" >> Application/.env
         echo "FUNCTION_DELETE_URL=$(gcloud secrets versions access latest --secret=FUNCTION_DELETE_URL)" >> Application/.env
+        echo "DELIVERY_PIPELINE=$(gcloud secrets versions access latest --secret=DELIVERY_PIPELINE)" >> Application/.env
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -104,6 +105,20 @@ steps:
         docker stop my-app
         docker rm my-app
         docker rmi "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Deploying to Cloud Deploy..."
+        gcloud deploy releases create \
+          --project=$_PROJECT_ID \
+          --region=$_REGION \
+          --delivery-pipeline=$_DELIVERY_PIPELINE \
+          --release=V1.0 \
+          --description="Deploying new version of App to V1.0" \
+          --image=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0
 
 substitutions:
   _PROJECT_ID: networking-438508
