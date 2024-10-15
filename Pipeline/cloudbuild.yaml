@@ -81,7 +81,8 @@ steps:
           docker inspect my-app
           echo "Waiting for the app to start..."
           for i in {1..12}; do
-            RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://localhost:3000)
+            # Change to accessing the Docker container's internal address
+            RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://127.0.0.1:3000)
             if [ "$$RESPONSE" -eq 200 ]; then
               echo "✔ Website is up and running!"
               exit 0
