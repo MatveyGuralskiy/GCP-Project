@@ -96,13 +96,13 @@ steps:
 
         echo "Checking application status..."
         for i in {1..3}; do
-          RESPONSE=$$(curl -s -o /dev/null -w "%{http_code}" http://0.0.0.0:3000)
+          RESPONSE=$$(nc -z localhost 3000)
           if [ "$$RESPONSE" -eq 200 ]; then
             echo "✔ Application page is accessible"
             break
           fi
-          echo "Attempt $$i: Application not accessible yet. HTTP status: $$RESPONSE. Retrying in 5 seconds..."
-          sleep 5
+          echo "Attempt $$i: Application not accessible yet. HTTP status: $$RESPONSE. Retrying in 3 seconds..."
+          sleep 3
         done
 
         # Check final response
