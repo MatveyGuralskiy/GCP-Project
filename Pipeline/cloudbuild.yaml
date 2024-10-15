@@ -110,7 +110,7 @@ steps:
             echo "✔ Website is up and running!"
             exit 0
           fi
-          echo "Attempt $i: Website not ready yet. Status code: $RESPONSE. Waiting..."
+          echo "Attempt $$i: Website not ready yet. Status code: $$RESPONSE. Waiting..."
           sleep 5
         done
         echo "Website did not become accessible within the allocated time."
