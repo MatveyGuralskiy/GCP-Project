@@ -28,9 +28,8 @@ steps:
       - "-c"
       - |
         echo "Creating keys directory..."
-        export GCP_KEYFILE=$(gcloud secrets versions access latest --secret=GCP_KEYFILE)
         mkdir -p Application/keys  # Create the keys directory if it doesn't exist
-        echo "${GCP_KEYFILE}" > Application/keys/networking.json
+        gcloud secrets versions access latest --secret=GCP_KEYFILE > Application/keys/networking.json
 
   - name: "node:18"
     entrypoint: "bash"
