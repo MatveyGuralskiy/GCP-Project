@@ -4,10 +4,10 @@ metadata:
   name: my-app
 build:
   artifacts:
-    - image: $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0
+    - image: europe-west1-docker.pkg.dev/networking-438508/app:V1.0
       context: Application
       docker:
         dockerfile: Dockerfile
 deploy:
   cloudrun:
-    region: $_REGION
+    region: europe-west1
