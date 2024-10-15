@@ -69,12 +69,6 @@ steps:
       - |
         docker run --name my-app -d -p 3000:3000 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
-  - name: "gcr.io/cloud-builders/docker"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-        echo "Checking if Docker container 'my-app' is running..."
         if ! docker ps | grep -q my-app; then
           echo "Docker container 'my-app' is not running."
           docker ps -a
@@ -83,16 +77,15 @@ steps:
         fi
 
         echo "✔ Docker container 'my-app' is running."
-        CONTAINER_IP=$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
 
-        for i in {1..12}; do
-          HTTP_CODE=$$(curl -o /dev/null -s -w "%{http_code}" http://$$CONTAINER_IP:3000)
+        for i in {1..20}; do
+          HTTP_CODE=$$(curl -o /dev/null -s -w "%{http_code}" http://localhost:3000)  # Check localhost or $CONTAINER_IP
           if [ "$$HTTP_CODE" -eq 200 ]; then
             echo "✔ Website is up and running!"
             exit 0
           fi
-          echo "Attempt $$i: Website not ready yet. HTTP status: $$HTTP_CODE. Retrying in 5 seconds..."
-          sleep 5
+          echo "Attempt $$i: Website not ready yet. HTTP status: $$HTTP_CODE. Retrying in 10 seconds..."
+          sleep 10
         done
 
         echo "Website did not become accessible within the allocated time."
