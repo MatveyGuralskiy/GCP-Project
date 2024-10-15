@@ -95,3 +95,9 @@ steps:
         docker stop my-app
         docker rm my-app
         docker rmi "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0"
+
+logsBucket: $LOGS_BUCKET
+serviceAccount: $SERVICE_ACCOUNT
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
