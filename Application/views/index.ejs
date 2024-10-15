@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Storage List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .btn-function1 {
+            background-color: green;
+            margin: 10px;
+            color: white;
+        }
+
+        .btn-function2 {
+            background-color: red;
+            margin: 5px;
+            color: white;
+        }
+
+        .btn-function1:hover {
+            background-color: green;
+            color: rgba(255, 255, 255, 0.795);
+        }
+
+        .btn-function2:hover {
+            background-color: red;
+            color: rgba(255, 255, 255, 0.795);
+        }
+
+        .logo {
+            width: 50px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+    <script>
+        function formatFileSize(bytes) {
+            if (bytes >= 1048576) {
+                return (bytes / 1048576).toFixed(2) + ' MB';
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).toFixed(2) + ' KB';
+            } else {
+                return bytes + ' Bytes';
+            }
+        }
+
+        function formatAllFileSizes() {
+            const fileSizes = document.querySelectorAll('.file-size');
+            fileSizes.forEach(fileSizeElement => {
+                const size = parseInt(fileSizeElement.getAttribute('data-size'));
+                fileSizeElement.textContent = formatFileSize(size);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', formatAllFileSizes);
+
+        async function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `alert alert-${type}`;
+            notification.classList.remove('d-none');
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('d-none');
+            }, 3000);
+        }
+
+        async function triggerFunction1() {
+            const response = await fetch('/trigger-copy', { method: 'POST' });
+            const result = await response.text();
+            showNotification(result); // Show the result in a notification
+        }
+
+        async function triggerFunction2() {
+            const response = await fetch('/trigger-delete', { method: 'POST' });
+            const result = await response.text();
+            showNotification(result); // Show the result in a notification
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <img src="/images/GCP.png" alt="GCP Logo" class="logo">
+        <div id="notification" class="alert d-none" role="alert"></div>
+        <h1 class="my-4 text-center">Cloud Storage List</h1>
+
+        <% if (loggedIn) { %>
+            <a href="/upload" class="btn btn-primary mb-3">Upload Files</a>
+            <% if (username==='Admin' ) { %> <!-- Check if the username is Admin -->
+                <h2>Welcome,Admin! Do you want to accept new files to Main Bucket?</h2>
+                <button class="btn btn-function1" onclick="triggerFunction1()">Accept</button>
+                <button class="btn btn-function2" onclick="triggerFunction2()">Decline</button>
+                <% } %>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-primary mb-3 me-2">Login</a>
+                        <a href="/register" class="btn btn-primary mb-3">Register</a>
+                        <% } %>
+
+                            <input class="form-control mb-3" id="search" type="text" placeholder="Search...">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Last Modified</th>
+                                        <th>Size</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="object-list">
+                                    <% files.forEach(file=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= file.name %>
+                                            </td>
+                                            <td>
+                                                <%= new Date(file.lastModified).toLocaleString() %>
+                                            </td>
+                                            <td class="file-size" data-size="<%= file.size %>"></td>
+                                            <td>
+                                                <a href="<%= file.url %>" class="btn btn-sm btn-primary"
+                                                    target="_blank">View</a>
+                                                <a href="/download/<%= encodeURIComponent(file.name) %>"
+                                                    class="btn btn-sm btn-primary">Download</a>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+
+                            <div class="row mt-5">
+                                <p style="text-align: center;">Version 1.0<br> &#169; Created by Matvey Guralskiy</p>
+                            </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

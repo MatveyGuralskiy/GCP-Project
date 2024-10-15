@@ -1,0 +1,32 @@
+steps:
+  - name: "node:18"
+    entrypoint: "npm"
+    args: ["install"]
+
+  - name: "node:18"
+    entrypoint: "npm"
+    args: ["test"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0",
+        ".",
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0",
+      ]
+
+substitutions:
+  _PROJECT_ID: networking-438508
+  _REPOSITORY_NAME: app-gcp
+  _REGION: europe-west3
+
+images:
+  - "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"

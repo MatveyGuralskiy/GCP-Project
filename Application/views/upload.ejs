@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Upload File</title>
+    <style>
+        .upload-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+
+        .upload-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 50px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="upload-container">
+            <img src="/images/GCP.png" alt="GCP Logo" class="logo">
+            <h1>Upload File</h1>
+
+            <!-- Success alert -->
+            <% if (typeof success !=='undefined' ) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa fa-check-circle"></i>
+                    <%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% } %>
+
+                    <!-- Error alert -->
+                    <% if (typeof error !=='undefined' ) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fa fa-times-circle"></i>
+                            <%= error %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                        <% } %>
+
+                            <!-- File upload form -->
+                            <form action="/upload" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="file" class="form-label">Choose a file to upload</label>
+                                    <input type="file" class="form-control" id="file" name="file" required>
+                                </div>
+
+                                <!-- Buttons in one row -->
+                                <div class="d-flex justify-content-between">
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <a href="/" class="btn btn-secondary">
+                                        <i class="fa fa-arrow-left"></i> Back
+                                    </a>
+                                </div>
+                            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
