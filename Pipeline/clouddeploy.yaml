@@ -9,18 +9,6 @@ serialPipeline:
     - targetId: run-production-2
       profiles:
         - name: cloud-run-autoscaling
-          manifest:
-            deploy:
-              cloudRun:
-                service: matvey-cloud-run-service
-                region: ${_REGION}
-                image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
-                cpu: 1
-                memory: 256Mi
-                maxInstances: 5
-                minInstances: 2
-                timeout: 60
-                allowUnauthenticated: true
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -38,3 +26,21 @@ metadata:
   description: "Cloud Run Production Target 2"
 run:
   location: ${_REGION}
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Profile
+metadata:
+  name: cloud-run-autoscaling
+spec:
+  manifest:
+    deploy:
+      cloudRun:
+        service: matvey-cloud-run-service
+        region: ${_REGION}
+        image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
+        cpu: 1
+        memory: 256Mi
+        maxInstances: 5
+        minInstances: 2
+        timeout: 60
+        allowUnauthenticated: true
