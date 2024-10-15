@@ -29,4 +29,4 @@ substitutions:
   _REGION: europe-west3
 
 logsBucket: "gs://matvey-ci-cd"
-serviceAccount: "99824859807@cloudbuild.gserviceaccount.com"
+serviceAccount: "matvey-admin@networking-438508.iam.gserviceaccount.com"
