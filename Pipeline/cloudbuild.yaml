@@ -98,14 +98,14 @@ steps:
         echo "Checking network connectivity..."
         docker network ls
         docker network inspect bridge
-        CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
+        CONTAINER_IP=$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
         echo "Container IP: $$CONTAINER_IP"
         echo "Attempting to reach the container IP directly..."
         curl -v http://$$CONTAINER_IP:3000
 
         echo "Waiting for the app to start..."
         for i in {1..12}; do
-          RESPONSE=$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://localhost:80)
+          RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://localhost:80)
           if [ "$$RESPONSE" -eq 200 ]; then
             echo "✔ Website is up and running!"
             exit 0
