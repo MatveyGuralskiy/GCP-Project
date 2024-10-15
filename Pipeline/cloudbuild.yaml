@@ -68,10 +68,10 @@ steps:
         echo "Waiting for the app to start..."
         sleep 15
         RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost)
-        if [ "$RESPONSE" -eq 200 ]; then
+        if [ "$$RESPONSE" -eq 200 ]; then
           echo "✔ Website is up and running!"
         else
-          echo "Website is not accessible. Status code: $RESPONSE"
+          echo "Website is not accessible. Status code: $$RESPONSE"
           exit 1
         fi
 
