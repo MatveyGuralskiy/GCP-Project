@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: my-app
+build:
+  artifacts:
+    - image: $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0
+      context: Application
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  cloudrun:
+    region: $_REGION
