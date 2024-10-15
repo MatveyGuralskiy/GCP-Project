@@ -8,7 +8,7 @@ serialPipeline:
     - targetId: run-production-1
     - targetId: run-production-2
       profiles:
-        - name: cloud-run-autoscaling
+        - cloud-run-autoscaling
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
