@@ -123,7 +123,10 @@ steps:
       - |
         echo "Deploying to Cloud Deploy..."
         cd Pipeline
-        gcloud deploy apply --file=clouddeploy.yaml --region=$_REGION
+        gcloud deploy apply \
+          --file=clouddeploy.yaml \
+          --region=$_REGION \
+          --project=$_PROJECT_ID
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
