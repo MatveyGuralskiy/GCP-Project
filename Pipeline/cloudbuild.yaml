@@ -69,21 +69,45 @@ steps:
       - |
         docker run --name my-app -d -p 80:3000 "$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.0"
 
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        echo "Checking if Docker container is running..."
+        if docker ps | grep my-app; then
+          echo "✔ Docker container 'my-app' is running."
+          echo "Container details:"
+          docker inspect my-app
+        else
+          echo "Docker container 'my-app' is not running."
+          echo "All running containers:"
+          docker ps
+          echo "All containers (including stopped):"
+          docker ps -a
+          echo "Container logs:"
+          docker logs my-app || true
+          exit 1
+        fi
+
   - name: "gcr.io/cloud-builders/curl"
     entrypoint: "bash"
     args:
       - "-c"
       - |
         echo "Waiting for the app to start..."
-        for i in {1..60}; do
-          if curl -sSf http://localhost:80 >/dev/null 2>&1; then
+        for i in {1..12}; do
+          RESPONSE=$$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:80)
+          if [ "$$RESPONSE" -eq 200 ]; then
             echo "✔ Website is up and running!"
             exit 0
           fi
-          echo "Attempt $i: Website not ready yet. Waiting..."
+          echo "Attempt $i: Website not ready yet. Status code: $$RESPONSE. Waiting..."
           sleep 5
         done
         echo "Website did not become accessible within the allocated time."
+        echo "Container logs:"
+        docker logs my-app || true
         exit 1
 
   - name: "gcr.io/cloud-builders/docker"
