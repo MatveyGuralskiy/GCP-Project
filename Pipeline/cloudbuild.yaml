@@ -1,6 +1,11 @@
 steps:
   - name: "gcr.io/cloud-builders/git"
-    args: ["clone", "https://github.com/MatveyGuralskiy/GCP-Project", "."]
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        git fetch origin features
+        git checkout features
 
   - name: "node:18"
     entrypoint: "npm"
