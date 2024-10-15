@@ -91,24 +91,21 @@ steps:
           docker logs my-app || true
           exit 1
         fi
-
         echo "✔ Docker container 'my-app' is running."
-
         echo "Checking application status..."
         for i in {1..3}; do
           RESPONSE=$$(nc -z localhost 3000)
-          if [ "$$RESPONSE" -eq 200 ]; then
+          wget --spider --timeout=3 http://localhost:3000
+          if [ $$? -eq 0 ]; then
             echo "✔ Application page is accessible"
             break
           fi
-          echo "Attempt $$i: Application not accessible yet. HTTP status: $$RESPONSE. Retrying in 3 seconds..."
+          echo "Application not accessible yet. Retrying in 3 seconds..."
           sleep 3
         done
 
-        # Check final response
-        if [ "$$RESPONSE" -ne 200 ]; then
-          echo "Failed to access application page. HTTP status code: $$RESPONSE"
-          docker logs my-app  # Print logs for debugging
+        if [ $$? -ne 0 ]; then
+          echo "Failed to access application page."
           exit 1
         fi
 
