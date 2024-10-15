@@ -24,13 +24,19 @@ steps:
 
   - name: "node:18"
     entrypoint: "bash"
-    dir: "Application"
-    args: [npm install]
+    args:
+      - "-c"
+      - |
+        cd Application
+        npm install
 
   - name: "node:18"
     entrypoint: "bash"
-    dir: "Application"
-    args: [npm test]
+    args:
+      - "-c"
+      - |
+        cd Application
+        npm install
 
   - name: "gcr.io/cloud-builders/docker"
     dir: "Application"
