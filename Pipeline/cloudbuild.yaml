@@ -122,6 +122,7 @@ steps:
       - "-c"
       - |
         echo "Deploying to Cloud Deploy..."
+        cd Pipeline
         gcloud deploy apply --file=clouddeploy.yaml
 
   - name: "gcr.io/cloud-builders/gcloud"
