@@ -1,5 +1,3 @@
-# Cloud Deploy and Cloud Run configuration
-
 apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
@@ -9,7 +7,20 @@ serialPipeline:
   stages:
     - targetId: run-production-1
     - targetId: run-production-2
-
+      profiles:
+        - name: cloud-run-autoscaling
+          manifest:
+            deploy:
+              cloudRun:
+                service: matvey-cloud-run-service
+                region: ${_REGION}
+                image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
+                cpu: 1
+                memory: 256Mi
+                maxInstances: 5
+                minInstances: 2
+                timeout: 60
+                allowUnauthenticated: true
 ---
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -27,28 +38,3 @@ metadata:
   description: "Cloud Run Production Target 2"
 run:
   location: ${_REGION}
-
----
-apiVersion: run.googleapis.com/v1
-kind: Service
-metadata:
-  name: my-app
-spec:
-  template:
-    metadata:
-      annotations:
-        autoscaling.knative.dev/minScale: "2"
-        autoscaling.knative.dev/maxScale: "10"
-        autoscaling.knative.dev/target: "80"
-    spec:
-      containers:
-        - image: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY_NAME}/app-1:V1.0
-          ports:
-            - containerPort: 3000
-          env:
-            - name: App-GCP-Service
-              value: "App-GCP"
-          resources:
-            limits:
-              cpu: "1"
-              memory: 256Mi
