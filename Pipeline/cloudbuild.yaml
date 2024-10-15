@@ -95,6 +95,3 @@ steps:
         docker stop my-app
         docker rm my-app
         docker rmi "$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME/app:V1.0"
-
-logsBucket: $(gcloud secrets versions access latest --secret=LOGS_BUCKET)
-serviceAccount: $(gcloud secrets versions access latest --secret=SERVICE_ACCOUNT)
