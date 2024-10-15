@@ -79,10 +79,10 @@ steps:
           echo "✔ Docker container 'my-app' is running."
           echo "Container details:"
           docker inspect my-app
+          CONTAINER_IP=$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-app)
           echo "Waiting for the app to start..."
           for i in {1..12}; do
-            # Change to accessing the Docker container's internal address
-            RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://127.0.0.1:3000)
+            RESPONSE=$$(curl -v --write-out "%{http_code}" --silent --output /dev/null http://$$CONTAINER_IP:3000)
             if [ "$$RESPONSE" -eq 200 ]; then
               echo "✔ Website is up and running!"
               exit 0
