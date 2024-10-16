@@ -135,11 +135,12 @@ steps:
     args:
       - "-c"
       - |
+        DIGEST=$$(gcloud artifacts docker images describe europe-west1-docker.pkg.dev/networking-438508/app-gcp/app:v1-5-2 --format="get(image_summary.digest)")
         cd Pipeline
         gcloud deploy releases create cloud-run-release-v1-5-2 \
             --delivery-pipeline=pipeline-cloud-deploy \
             --region=$_REGION \
-            --images=app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:v1-5-2 \
+            --images=app=europe-west1-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app@sha256:$$DIGEST \
             --skaffold-file=skaffold.yaml
 
 substitutions:
