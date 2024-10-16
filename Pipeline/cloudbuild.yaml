@@ -63,7 +63,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4 .
+        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -71,7 +71,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4
+        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -79,7 +79,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4
+        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -112,10 +112,10 @@ steps:
         fi
 
         echo "Removing the Docker image..."
-        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4)" ]; then
-          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4
+        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5)" ]; then
+          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
         else
-          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4'."
+          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5'."
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -124,11 +124,21 @@ steps:
       - "-c"
       - |
         gcloud run deploy cloud-run-service \
-        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.4 \
+        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
         --region $_REGION \
         --platform managed \
         --allow-unauthenticated \
         --min-instances 2
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        gcloud deploy releases create cloud-run-release \
+            --delivery-pipeline=pipeline-cloud-deploy \
+            --region=$_REGION \
+            --images=IMAGE_NAME=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
 
 substitutions:
   _PROJECT_ID: networking-438508
