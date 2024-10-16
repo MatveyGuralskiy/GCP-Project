@@ -63,7 +63,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8 .
+        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9 .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -71,7 +71,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8
+        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -79,7 +79,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8
+        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -112,10 +112,10 @@ steps:
         fi
 
         echo "Removing the Docker image..."
-        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8)" ]; then
-          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8
+        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9)" ]; then
+          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9
         else
-          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8'."
+          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9'."
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -124,7 +124,7 @@ steps:
       - "-c"
       - |
         gcloud run deploy cloud-run-service \
-        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.8 \
+        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.9 \
         --region $_REGION \
         --platform managed \
         --allow-unauthenticated \
