@@ -85,7 +85,26 @@
 
         setInterval(() => {
             location.reload();
-        }, 5000);
+        }, 10000);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('search').addEventListener('input', () => {
+                const searchQuery = document.getElementById('search').value.toLowerCase();
+                const rows = document.querySelectorAll('#object-list tr');
+
+                let hasResults = false; // Flag to check if any row matches
+                rows.forEach(row => {
+                    const fileName = row.cells[0].textContent.toLowerCase();
+                    if (fileName.includes(searchQuery)) {
+                        row.style.display = '';
+                        hasResults = true; // Set flag if a match is found
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+
     </script>
 </head>
 
@@ -140,7 +159,7 @@
                             </table>
 
                             <div class="row mt-5">
-                                <p style="text-align: center;">V2.0<br> &#169; Created by Matvey Guralskiy</p>
+                                <p style="text-align: center;">V2.1<br> &#169; Created by Matvey Guralskiy</p>
                             </div>
     </div>
 
