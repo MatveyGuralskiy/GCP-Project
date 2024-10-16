@@ -4,7 +4,7 @@ metadata:
   name: cloud-run-deployment
 build:
   artifacts:
-    - image: europe-west1-docker.pkg.dev/networking-438508/app-gcp/app:V1.5
+    - image: europe-west1-docker.pkg.dev/networking-438508/app-gcp/app:1.51
 deploy:
   cloudrun:
     projectid: networking-438508

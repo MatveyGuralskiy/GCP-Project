@@ -63,7 +63,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 .
+        docker build -t $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51 .
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -71,7 +71,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
+        docker push $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -79,7 +79,7 @@ steps:
       - "-c"
       - |
         cd Application
-        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
+        docker run --name my-app -d -p 3000:3000 $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
@@ -112,10 +112,10 @@ steps:
         fi
 
         echo "Removing the Docker image..."
-        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5)" ]; then
-          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5
+        if [ "$(docker images -q $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51)" ]; then
+          docker rmi $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51
         else
-          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5'."
+          echo "No image found with tag '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51'."
         fi
 
   - name: "gcr.io/cloud-builders/gcloud"
@@ -124,7 +124,7 @@ steps:
       - "-c"
       - |
         gcloud run deploy cloud-run-service \
-        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
+        --image $_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51 \
         --region $_REGION \
         --platform managed \
         --allow-unauthenticated \
@@ -136,10 +136,10 @@ steps:
       - "-c"
       - |
         cd Pipeline
-        gcloud deploy releases create cloud-run-release-$(date +%Y%m%d%H%M%S) \
+        gcloud deploy releases create cloud-run-release-1.51 \
             --delivery-pipeline=pipeline-cloud-deploy \
             --region=$_REGION \
-            --images=app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
+            --images=app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:1.51 \
             --skaffold-file=skaffold.yaml
 
 substitutions:
