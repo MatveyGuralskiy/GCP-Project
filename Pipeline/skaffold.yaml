@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: cloud-run-deployment
+build:
+  artifacts:
+    - image: europe-west1-docker.pkg.dev/networking-438508/app-gcp/app:V1.5
+deploy:
+  cloudrun:
+    projectid: networking-438508
+    region: europe-west1
