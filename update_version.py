@@ -21,5 +21,5 @@ def update_version_in_files(new_version, files_to_update):
 
 if __name__ == "__main__":
     new_version = input("Enter the Version you want: ")
-    files_to_update = ["Pipeline/cloudbuild.yaml", "Pipeline/skaffold.yaml", "Application/views/index.ejs"]
+    files_to_update = ["Pipeline/cloudbuild.yaml", "Application/views/index.ejs"]
     update_version_in_files(new_version, files_to_update)
