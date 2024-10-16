@@ -136,7 +136,7 @@ steps:
       - "-c"
       - |
         cd Pipeline
-        gcloud deploy releases create cloud-run-release \
+        gcloud deploy releases create cloud-run-release-$(date +%Y%m%d%H%M%S) \
             --delivery-pipeline=pipeline-cloud-deploy \
             --region=$_REGION \
             --images=app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
