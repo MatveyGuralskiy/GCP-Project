@@ -135,6 +135,7 @@ steps:
     args:
       - "-c"
       - |
+        cd Pipeline
         gcloud deploy releases create cloud-run-release \
             --delivery-pipeline=pipeline-cloud-deploy \
             --region=$_REGION \
