@@ -139,7 +139,7 @@ steps:
         gcloud deploy releases create cloud-run-release \
             --delivery-pipeline=pipeline-cloud-deploy \
             --region=$_REGION \
-            --images=IMAGE_NAME=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
+            --images=app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_REPOSITORY_NAME/app:V1.5 \
             --skaffold-file=skaffold.yaml
 
 substitutions:
