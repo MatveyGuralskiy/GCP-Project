@@ -242,6 +242,11 @@ app.post('/trigger-delete', async (req, res) => {
     }
 });
 
+app.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/login');
+});
+
 if (process.env.NODE_ENV !== 'test') {
     app.listen(port, '0.0.0.0', () => {
         console.log(`Server is running on http://0.0.0.0:${port}`);

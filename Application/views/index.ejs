@@ -97,7 +97,8 @@
 
         <% if (loggedIn) { %>
             <a href="/upload" class="btn btn-primary mb-3">Upload Files</a>
-            <% if (username==='Admin' ) { %> <!-- Check if the username is Admin -->
+            <a href="/logout" class="btn btn-primary mb-3 ms-2">Log out</a>
+            <% if (username==='Admin' ) { %>
                 <h2>Welcome,Admin! Do you want to accept new files to Main Bucket?</h2>
                 <button class="btn btn-function1" onclick="triggerFunction1()">Accept</button>
                 <button class="btn btn-function2" onclick="triggerFunction2()">Decline</button>
@@ -139,7 +140,7 @@
                             </table>
 
                             <div class="row mt-5">
-                                <p style="text-align: center;">V1.9<br> &#169; Created by Matvey Guralskiy</p>
+                                <p style="text-align: center;">V2.0<br> &#169; Created by Matvey Guralskiy</p>
                             </div>
     </div>
 
