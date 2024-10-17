@@ -130,6 +130,17 @@ steps:
         --allow-unauthenticated \
         --min-instances 2
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        if [[ "$STATUS" == "SUCCESS" ]]; then
+          gcloud pubsub topics publish cloud-builds --message "Build succeeded for $BUILD_ID"
+        else
+          gcloud pubsub topics publish cloud-builds --message "Build failed for $BUILD_ID"
+        fi
+
 substitutions:
   _PROJECT_ID: networking-438508
   _REPOSITORY_NAME: app-gcp
