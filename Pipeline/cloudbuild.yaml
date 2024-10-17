@@ -135,10 +135,10 @@ steps:
     args:
       - "-c"
       - |
-        if [[ "$STATUS" == "SUCCESS" ]]; then
-          gcloud pubsub topics publish cloud-builds --message "Build succeeded for $BUILD_ID"
+        if [[ $? -eq 0 ]]; then
+          gcloud pubsub topics publish cloud-builds --message "Build succeeded for $BUILD_ID. Project: $PROJECT_ID, Repository: $_REPOSITORY_NAME, Region: $_REGION"
         else
-          gcloud pubsub topics publish cloud-builds --message "Build failed for $BUILD_ID"
+          gcloud pubsub topics publish cloud-builds --message "Build failed for $BUILD_ID. Project: $PROJECT_ID, Repository: $_REPOSITORY_NAME, Region: $_REGION"
         fi
 
 substitutions:
